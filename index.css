@@ -62,6 +62,71 @@ h2 {
   margin-bottom: 1rem;
 }
 
+.container {
+  background: -webkit-gradient(linear, left bottom, left top, from(black), color-stop(80%, black), color-stop(90%, rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0)));
+  background: linear-gradient(0deg, black 0%, black 80%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0) 100%);
+  margin-top: 5rem;
+}
+
+.container .face {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 17rem;
+  height: 17rem;
+}
+
+.container .cross {
+  margin-top: 3rem;
+  margin-bottom: 4rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 11.5rem;
+  height: 10rem;
+}
+
+.container .text {
+  margin-left: 10rem;
+  margin-right: 10rem;
+}
+
+.container h1 {
+  color: #FFF;
+  text-align: left;
+  font-family: 'Mont Heavy DEMO';
+  font-size: 3rem;
+  margin-left: 7rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.container p {
+  color: white;
+  text-align: left;
+  font-family: 'Montserrat', 'sans serif';
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.container p2 {
+  color: #c90505;
+  text-align: left;
+  font-family: 'Mont Heavy DEMO';
+  font-size: 1.3rem;
+}
+
+.container p3 {
+  color: rgba(255, 255, 255, 0.705);
+  text-align: right;
+  font-family: 'Montserrat', 'sans serif';
+  font-weight: 600;
+  font-size: 0.6rem;
+  margin-right: 3rem;
+  margin-bottom: 0.4rem;
+}
+
 .button-group {
   margin: 0 auto;
   padding-left: 1rem;
