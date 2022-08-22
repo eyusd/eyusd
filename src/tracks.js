@@ -4,6 +4,7 @@ import art_sm from "./assets/songs/covers/satanic mass.png";
 import art_co from "./assets/songs/covers/collapse.png";
 import art_me from "./assets/songs/covers/memento.png";
 import art_pa from "./assets/songs/covers/passerby.png";
+import art_hy from "./assets/songs/covers/hymn.jpg";
 
 import song_ha from "./assets/songs/hallucinations.mp3";
 import song_ss from "./assets/songs/summertime sadness.mp3";
@@ -11,9 +12,17 @@ import song_sm from "./assets/songs/satanic mass.mp3";
 import song_co from "./assets/songs/collapse.mp3";
 import song_me from "./assets/songs/memento.mp3";
 import song_pa from "./assets/songs/passerby.mp3";
+import song_hy from "./assets/songs/hymn.mp3";
 
-// All of these artists are at https://pixabay.com/music/search/mood/laid%20back/
+
 export default [
+  {
+    title: "hymn",
+    artist: "eyusd.",
+    audioSrc: song_hy,
+    image: art_hy,
+    links : {unreleased: "null"}
+  },
   {
     title: "passerby",
     artist: "eyusd.",

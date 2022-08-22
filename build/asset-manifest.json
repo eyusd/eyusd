@@ -1,8 +1,9 @@
 {
   "files": {
     "main.css": "/static/css/main.31978a7a.css",
-    "main.js": "/static/js/main.7c03d946.js",
+    "main.js": "/static/js/main.4a1016a3.js",
     "static/media/passerby.mp3": "/static/media/passerby.97ccaa0fa604cc8460a0.mp3",
+    "static/media/hymn.mp3": "/static/media/hymn.2c5d5b56d267a1a5a150.mp3",
     "static/media/hallucinations.mp3": "/static/media/hallucinations.0b5cc77b1735b9fdf37f.mp3",
     "static/media/collapse.mp3": "/static/media/collapse.4e62122c7f55074fbfb2.mp3",
     "static/media/summertime sadness.mp3": "/static/media/summertime sadness.89e88caf8479d08e94ba.mp3",
@@ -15,6 +16,7 @@
     "static/media/summertime sadness.png": "/static/media/summertime sadness.583f004a6cdf5a262ec8.png",
     "static/media/satanic mass.png": "/static/media/satanic mass.09af9d7741e1f89abcc0.png",
     "static/media/hallucinations.png": "/static/media/hallucinations.af0f7bbe6b89f34aebbc.png",
+    "static/media/hymn.jpg": "/static/media/hymn.6cea8f6faef782c95d35.jpg",
     "static/media/Mont-HeavyDEMO.svg": "/static/media/Mont-HeavyDEMO.09e1f74b85f965791249.svg",
     "static/media/Mont-HeavyDEMO.eot": "/static/media/Mont-HeavyDEMO.41c06df44436520420a3.eot",
     "static/media/Mont-HeavyDEMO.ttf": "/static/media/Mont-HeavyDEMO.a3c9bc79d36924c9c196.ttf",
@@ -33,10 +35,10 @@
     "static/media/youtube.svg": "/static/media/youtube.14a02d17be9a91cbd286b0daae0a070e.svg",
     "static/media/play.svg": "/static/media/play.ae28f2f8ed43f26bbecc733fd80f370c.svg",
     "main.31978a7a.css.map": "/static/css/main.31978a7a.css.map",
-    "main.7c03d946.js.map": "/static/js/main.7c03d946.js.map"
+    "main.4a1016a3.js.map": "/static/js/main.4a1016a3.js.map"
   },
   "entrypoints": [
     "static/css/main.31978a7a.css",
-    "static/js/main.7c03d946.js"
+    "static/js/main.4a1016a3.js"
   ]
 }
