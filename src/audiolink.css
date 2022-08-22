@@ -1,0 +1,104 @@
+.noselect {
+    user-select: none;
+}
+  
+.link {
+    text-decoration: none;
+    margin: 0 15px;
+    margin-top: 20px;
+    max-width: 480px;
+    height: 55px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    border: 0px;
+    border-top: 1.5px solid rgba(255, 255, 255, 0.18);
+    border-left: 2px solid rgba(255, 255, 255, 0.18);
+    border-radius: 16px;
+    box-shadow: 3px 3px 16px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.075);
+    backdrop-filter: blur(3px) saturate(110%);
+}
+
+.link, .link div {
+    transition-delay: 0.1s;
+    transition: transform 0.3s ease-in-out;
+}
+
+.link .text {
+    transition-delay: 0.1s;
+    transition: 0.3s ease-in-out;
+    transform: translateX(0px);
+    margin: auto;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: 4px;
+}
+
+.link .icon {
+    position: absolute;
+    transform: translateX(0px);
+    height: 50px;
+    width: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    will-change: transform;
+}
+
+.link svg {
+    width: 24px;
+    fill: white;
+}
+
+.youtube:hover {
+    background: #FF0000;
+}
+
+.spotify:hover {
+    background: #1DB954;
+}
+
+.deezer:hover {
+    background: linear-gradient(45deg, #ff0000, #ffed00, #ff0092, #c2ff00, #00c7f2, #c1f1fc);
+}
+
+.apple-music:hover {
+    background: #f94c57;
+}
+
+.youtube-music:hover {
+    background: #FF0000;
+}
+
+.tidal:hover {
+    background: #000000;
+}
+
+.amazon-music:hover {
+    background: #0DBFF5;
+}
+
+.link:hover .text {
+    color: transparent;
+}
+
+.link:hover .icon {
+    transform: translateX(195px);
+}
+
+.link:focus {
+    outline: none;
+}
+
+@media only screen and (max-width: 768px) {
+    .link:hover .icon {
+        transform: translateX(50%);
+    }
+    .link:hover .text {
+        color: transparent;
+    }
+}
