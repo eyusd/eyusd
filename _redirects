@@ -1,4 +1,2 @@
 # Redirects from what the browser requests to what we serve
-/                   /
-/links              /links
-/titles             /titles
+/*                   /index.html        200
