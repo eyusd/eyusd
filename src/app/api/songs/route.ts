@@ -47,41 +47,97 @@ function seededRandom(seed: string): () => number {
 }
 
 // Helper function to diversify song selection
-function diversifySongs(songs: Song[], targetCount: number = K_NEAREST_NEIGHBORS, seed?: string): Song[] {
+function diversifySongs(songs: Song[], targetCount: number = K_NEAREST_NEIGHBORS, seed?: string, preserveOrder: boolean = false): Song[] {
   const artistCounts = new Map<string, number>();
   const selectedSongs: Song[] = [];
   
-  // Create a shuffled copy using seeded randomness if seed is provided
-  let shuffledSongs: Song[];
-  if (seed) {
-    const random = seededRandom(seed);
-    shuffledSongs = [...songs].sort(() => random() - 0.5);
-  } else {
-    shuffledSongs = [...songs].sort(() => Math.random() - 0.5);
-  }
-  
-  // First pass: pick songs while respecting artist limits
-  for (const song of shuffledSongs) {
-    if (selectedSongs.length >= targetCount) break;
+  if (preserveOrder) {
+    // For similarity-based selection: keep top 5 closest, then diversify the rest
+    const TOP_SIMILAR_COUNT = 5;
     
-    // Split artist field by comma and take the first artist for counting
-    const primaryArtist = song.artist.split(',')[0].trim().toLowerCase();
-    const currentCount = artistCounts.get(primaryArtist) || 0;
-    
-    if (currentCount < MAX_SONGS_PER_ARTIST) {
-      selectedSongs.push(song);
-      artistCounts.set(primaryArtist, currentCount + 1);
+    // First pass: select top similar songs (in order) while respecting artist limits
+    for (const song of songs) {
+      if (selectedSongs.length >= Math.min(TOP_SIMILAR_COUNT, targetCount)) break;
+      
+      const primaryArtist = song.artist.split(',')[0].trim().toLowerCase();
+      const currentCount = artistCounts.get(primaryArtist) || 0;
+      
+      if (currentCount < MAX_SONGS_PER_ARTIST) {
+        selectedSongs.push(song);
+        artistCounts.set(primaryArtist, currentCount + 1);
+      }
     }
-  }
-  
-  // Second pass: if we still need more songs, add remaining ones
-  if (selectedSongs.length < targetCount) {
+    
+    // Second pass: diversify the remaining slots
+    if (selectedSongs.length < targetCount) {
+      // Get remaining songs not yet selected
+      const remainingSongs = songs.filter(song => 
+        !selectedSongs.find(s => s.id === song.id)
+      );
+      
+      // Shuffle remaining songs for diversity
+      let shuffledRemaining: Song[];
+      if (seed) {
+        const random = seededRandom(seed + '_remaining');
+        shuffledRemaining = [...remainingSongs].sort(() => random() - 0.5);
+      } else {
+        shuffledRemaining = [...remainingSongs].sort(() => Math.random() - 0.5);
+      }
+      
+      // Fill remaining slots with diverse selection
+      for (const song of shuffledRemaining) {
+        if (selectedSongs.length >= targetCount) break;
+        
+        const primaryArtist = song.artist.split(',')[0].trim().toLowerCase();
+        const currentCount = artistCounts.get(primaryArtist) || 0;
+        
+        if (currentCount < MAX_SONGS_PER_ARTIST) {
+          selectedSongs.push(song);
+          artistCounts.set(primaryArtist, currentCount + 1);
+        }
+      }
+      
+      // Final pass: if still need more, add any remaining songs
+      if (selectedSongs.length < targetCount) {
+        for (const song of shuffledRemaining) {
+          if (selectedSongs.length >= targetCount) break;
+          if (!selectedSongs.find(s => s.id === song.id)) {
+            selectedSongs.push(song);
+          }
+        }
+      }
+    }
+  } else {
+    // Original behavior for initial load: full shuffling
+    let shuffledSongs: Song[];
+    if (seed) {
+      const random = seededRandom(seed);
+      shuffledSongs = [...songs].sort(() => random() - 0.5);
+    } else {
+      shuffledSongs = [...songs].sort(() => Math.random() - 0.5);
+    }
+    
+    // First pass: pick songs while respecting artist limits
     for (const song of shuffledSongs) {
       if (selectedSongs.length >= targetCount) break;
       
-      // Add songs we haven't selected yet
-      if (!selectedSongs.find(s => s.id === song.id)) {
+      const primaryArtist = song.artist.split(',')[0].trim().toLowerCase();
+      const currentCount = artistCounts.get(primaryArtist) || 0;
+      
+      if (currentCount < MAX_SONGS_PER_ARTIST) {
         selectedSongs.push(song);
+        artistCounts.set(primaryArtist, currentCount + 1);
+      }
+    }
+    
+    // Second pass: if we still need more songs, add remaining ones
+    if (selectedSongs.length < targetCount) {
+      for (const song of shuffledSongs) {
+        if (selectedSongs.length >= targetCount) break;
+        
+        if (!selectedSongs.find(s => s.id === song.id)) {
+          selectedSongs.push(song);
+        }
       }
     }
   }
@@ -117,26 +173,22 @@ export async function GET(req: NextRequest) {
         };
       }
     } else {
-      // Fetch a truly random song to start
-      // Fetch a larger batch of songs and randomly select one
-      const randomBatchSize = 50; // Fetch 50 songs to pick randomly from
-      
-      const randomResult = await qdrantClient.scroll(QDRANT_COLLECTION_NAME, {
-        limit: randomBatchSize,
+      // Fetch a truly random song from the entire database using Qdrant's random sampling
+      const randomResult = await qdrantClient.query(QDRANT_COLLECTION_NAME, {
+        query: {
+          sample: "random"
+        },
+        limit: 1,
         with_vector: true,
+        with_payload: true,
       });
       
       if (randomResult.points.length === 0) {
         return NextResponse.json({ error: 'No songs in collection' }, { status: 404 });
       }
       
-      // Use current timestamp as seed for initial random selection
-      // This ensures each page load is random, but API calls without songId are still deterministic within the same session
-      const timeSeed = Date.now().toString();
-      const random = seededRandom(timeSeed);
-      const randomIndex = Math.floor(random() * randomResult.points.length);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const record = randomResult.points[randomIndex] as any;
+      const record = randomResult.points[0] as any;
       
       referenceSong = {
         id: record.id,
@@ -176,7 +228,8 @@ export async function GET(req: NextRequest) {
       .filter(song => song.id !== referenceSong.id); // Exclude the reference song itself
 
     // Apply diversification to get a varied selection
-    const similarSongs = diversifySongs(allSimilarSongs, K_NEAREST_NEIGHBORS, referenceSong.id);
+    // Use preserveOrder=true when we have a specific song ID to maintain similarity ranking
+    const similarSongs = diversifySongs(allSimilarSongs, K_NEAREST_NEIGHBORS, referenceSong.id, !!songId);
 
     return NextResponse.json({
       current: referenceSong,
