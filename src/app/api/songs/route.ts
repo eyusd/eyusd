@@ -1,8 +1,9 @@
-export const dynamic = 'force-dynamic'; // Ensure this route is always fresh
-
 import { NextRequest, NextResponse } from 'next/server';
 import { qdrantClient, QDRANT_COLLECTION_NAME } from '@/lib/qdrant';
 import { Song } from '@/lib/types';
+
+// Disable NextJS caching for this route
+export const dynamic = 'force-dynamic';
 
 const K_NEAREST_NEIGHBORS = 8;
 const FETCH_MULTIPLIER = 4; // Fetch 4x more songs to have variety to choose from
@@ -180,6 +181,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       current: referenceSong,
       similar: similarSongs,
+    }, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
     });
 
   } catch (error) {

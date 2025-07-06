@@ -1,7 +1,8 @@
-export const dynamic = 'force-dynamic'; // Ensure this route is always fresh
-
 import { NextRequest, NextResponse } from 'next/server';
 import sharp from 'sharp';
+
+// Disable NextJS caching for this route
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   try {
@@ -43,7 +44,9 @@ export async function GET(req: NextRequest) {
     return new NextResponse(new Uint8Array(processedImage), {
       headers: {
         'Content-Type': 'image/jpeg',
-        'Cache-Control': 'public, max-age=86400', // Cache for 24 hours
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
       },
     });
 

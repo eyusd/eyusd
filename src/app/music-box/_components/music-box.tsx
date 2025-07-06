@@ -15,7 +15,13 @@ export function MusicBox() {
     async function fetchSongs() {
       musicBoxState.loading = true;
       try {
-        const res = await fetch('/api/songs');
+        const res = await fetch('/api/songs', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+          },
+        });
         const data = await res.json();
         // Compose: [current, ...similar]
         const tracks = [data.current, ...(data.similar || [])];

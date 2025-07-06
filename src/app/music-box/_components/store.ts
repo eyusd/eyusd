@@ -31,7 +31,13 @@ export async function setAsReference(songId: string) {
   musicBoxState.loading = true;
   
   try {
-    const res = await fetch(`/api/songs?id=${songId}`);
+    const res = await fetch(`/api/songs?id=${songId}`, {
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+      },
+    });
     const data = await res.json();
     
     // Add current reference to history if it exists
@@ -85,7 +91,13 @@ export async function goBackToPreviousReference() {
     const previousReference = musicBoxState.referenceHistory.pop()!;
     
     // Fetch similar songs for the previous reference
-    const res = await fetch(`/api/songs?id=${previousReference.id}`);
+    const res = await fetch(`/api/songs?id=${previousReference.id}`, {
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+      },
+    });
     const data = await res.json();
     
     // Store new tracks in pending area (don't apply yet)
