@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'; // Ensure this route is always fresh
+
 import { NextRequest, NextResponse } from 'next/server';
 import sharp from 'sharp';
 
